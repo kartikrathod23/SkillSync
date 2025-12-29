@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import { Link, useNavigate } from 'react-router-dom';
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -13,7 +15,7 @@ const LoginPage = () => {
     e.preventDefault();
     // console.log('Logging in with:', { email, password });
     try {
-      const res = await fetch('http://localhost:5000/api/auth/login', {
+      const res = await fetch(`${API_BASE}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -37,7 +39,7 @@ const LoginPage = () => {
     <div className="flex items-center justify-center h-screen bg-white px-4">
       <Navbar />
       <div className="w-full max-w-md bg-white p-10 rounded shadow-lg">
-        <h2 className="text-xl font-bold mb-2">Welcome back to SkillBridge</h2>
+        <h2 className="text-xl font-bold mb-2">Welcome back to SkillSync</h2>
         <p className="text-sm text-gray-500 mb-6">Log in to continue learning and sharing.</p>
         <form className="space-y-4" onSubmit={handleLogin}>
           <input type="email" placeholder="Email address" onChange={(e) => setEmail(e.target.value)} className="w-full px-4 py-2 border rounded" />

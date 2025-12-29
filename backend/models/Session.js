@@ -6,6 +6,12 @@ const sessionSchema = new mongoose.Schema({
   topic: String,
   scheduledAt: Date,
   status: { type: String, enum: ['pending', 'accepted', 'rejected'], default: 'pending' },
+  note: String,
+  completed: {
+    type: Boolean,
+    default: false,
+  },
+  completedAt: Date,
 }, { timestamps: true });
 
 export default mongoose.model('Session', sessionSchema);

@@ -1,5 +1,6 @@
-import React,{useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 
 // const profiles = [
@@ -36,7 +37,7 @@ const ProfileShowcase = () => {
       const token = localStorage.getItem('token');
       if (!token) return;
 
-      const res = await fetch('http://localhost:5000/api/match/learnonly', {
+      const res = await fetch(`${API_BASE}/api/match/learnonly`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -56,7 +57,10 @@ const ProfileShowcase = () => {
           <div key={idx} className="border border-gray-200 rounded-lg p-4 hover:shadow-lg">
             <div className="flex flex-col justify-between  mb-2">
               <h3 className="text-orange-600 text-md font-bold">{profile.fullname}</h3>
-              <p className="bg-orange-100 px-2 py-1 rounded-full inline-block">{profile.experienceLevel}</p>
+              <span className="bg-orange-100 px-3 py-1 mt-1 rounded-full text-sm font-medium self-start w-fit">
+                {profile.experienceLevel}
+              </span>
+
               <p className="text-sm text-gray-600 mb-2">{profile.experienceSummary}</p>
               <span className="text-sm text-yellow-500 font-medium">⭐ {profile.rating}</span>
             </div>
@@ -82,7 +86,12 @@ const ProfileShowcase = () => {
           </div>
         ))}
       </div>
-      <button className='ml-auto block mt-2 p-2 rounded-2xl text-orange-600 font-bold'>View More →</button>
+      <button
+        onClick={() => navigate('/all-skill-matches')}
+        className='ml-auto block mt-2 p-2 rounded-2xl text-orange-600 font-bold'
+      >
+        View More →
+      </button>
     </div>
   );
 };

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import { Link, useNavigate } from 'react-router-dom';
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 
 const SignupPage = () => {
     const [step, setStep] = useState(1);
@@ -46,7 +48,7 @@ const SignupPage = () => {
         };
 
         try{
-            const res = await fetch('http://localhost:5000/api/auth/register',{
+            const res = await fetch(`${API_BASE}/api/auth/register`,{
                 method:'POST',
                 headers:{'Content-Type': 'application/json'},
                 body:JSON.stringify(processedData)
@@ -77,7 +79,7 @@ const SignupPage = () => {
 
             {/* Right Section - Form */}
             <div className="w-1/2 flex flex-col justify-center px-14 py-10 mt-16">
-                <h2 className="text-xl font-bold text-gray-800 mb-1">Join SkillBridge today</h2>
+                <h2 className="text-xl font-bold text-gray-800 mb-1">Join SkillSync today</h2>
                 <p className="text-sm text-gray-600 mb-8">Unlock a world of learning opportunities.</p>
 
                 <form onSubmit={handleSubmit} className="space-y-4">

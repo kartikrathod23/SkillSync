@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
     github:String,
     linkedin:String,
     portfolio:String,
-    bio:String
+    bio:String,
 });
 
 const User = mongoose.model('User',userSchema);

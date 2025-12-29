@@ -12,13 +12,14 @@ function Navbar() {
                         <img src={logo} alt="Logo" className="h-8 w-8" />
                         <span className="font-bold text-xl text-amber-600">SkillLink</span>
                     </div> */}
+                    <Link to={'/'} className="hover:text-amber-500 text-orange-500 font-extrabold text-2xl">SKILLSYNC</Link>
 
                     {/* Navigation Links */}
                     <nav className="hidden md:flex gap-6 text-gray-700 font-medium">
                         <Link to="/" className="hover:text-amber-500">Home</Link>
                         <Link to="/about" className="hover:text-amber-500">About</Link>
                         <Link to="/features" className="hover:text-amber-500">Features</Link>
-                        <Link to="/contact" className="hover:text-amber-500">Contact</Link>
+                        <Link to="/" className="hover:text-amber-500">Contact</Link>
                     </nav>
 
                     {/* Auth Buttons */}

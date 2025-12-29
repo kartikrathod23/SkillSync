@@ -1,18 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import SessionRequestModal from '../components/SessionRequestModal';
+import profileImg from '../assets/profile.jpeg'
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 
 const UserProfile = () => {
     const { id } = useParams();
     const [profile, setProfile] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
+    const [session, setSession] = useState(null)
+
+    const [showModal, setShowModal] = useState(false);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem('token');
 
         const fetchData = async () => {
             const [profileRes, currentRes] = await Promise.all([
-                fetch(`http://localhost:5000/api/auth/users/${id}`),
-                fetch('http://localhost:5000/api/auth/me', {
+                fetch(`${API_BASE}/api/auth/users/${id}`),
+                fetch(`${API_BASE}/api/auth/me`, {
                     headers: { Authorization: `Bearer ${token}` },
                 }),
             ]);
@@ -26,22 +35,83 @@ const UserProfile = () => {
         fetchData();
     }, [id]);
 
-    const handleRequestSession = async () => {
-        const token = localStorage.getItem('token');
+    useEffect(() => {
+        const fetchSession = async () => {
+            const token = localStorage.getItem('token');
+            if (!token || !profile) return;
 
-        await fetch('http://localhost:5000/api/sessions/request', {
+            const res = await fetch(`${API_BASE}/api/sessions/between/${profile._id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            const data = await res.json();
+            setSession(data); // will be null if no session
+        };
+
+        if (profile) fetchSession();
+    }, [profile]);
+
+
+    // const handleRequestSession = async () => {
+    //     const token = localStorage.getItem('token');
+
+    //     await fetch('http://localhost:5000/api/sessions/request', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             Authorization: `Bearer ${token}`,
+    //         },
+    //         body: JSON.stringify({
+    //             recipientId: profile._id,
+    //             topic: 'Skill exchange session',
+    //             scheduledAt: new Date().toISOString(), // or let user pick
+    //         }),
+    //     });
+    // };
+
+    const handleSendRequest = async (FormData) => {
+        const token = localStorage.getItem('token')
+        await fetch(`${API_BASE}/api/sessions/request`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({
-                recipientId: profile._id,
-                topic: 'Skill exchange session',
-                scheduledAt: new Date().toISOString(), // or let user pick
-            }),
+            body: JSON.stringify(FormData),
+
+        })
+        setSession({ status: 'pending' });
+    }
+
+
+    const handleStartChat = async () => {
+        if (!currentUser || !profile) {
+            alert("User data not loaded yet.");
+            return;
+        }
+
+        const token = localStorage.getItem('token');
+        const res = await fetch(`${API_BASE}/api/messages/room`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({ userId: profile._id })
         });
+
+        const room = await res.json();
+        if (!room?._id) {
+            alert("Could not create or retrieve chat room.");
+            return;
+        }
+
+        localStorage.setItem('userId', currentUser._id);
+        localStorage.setItem('chatUserId', profile._id);
+        navigate(`/chat/${room._id}`);
     };
+
+
 
 
     if (!profile || !currentUser) return <p>Loading profile...</p>;
@@ -53,7 +123,7 @@ const UserProfile = () => {
             <div className="h-40 bg-gradient-to-r from-orange-400 to-orange-600"></div>
             <div className="px-6 pb-6 -mt-12 relative">
                 <div className="w-24 h-24 rounded-full border-4 border-white overflow-hidden absolute top-[-3rem]">
-                    <img src="https://i.pravatar.cc/100" alt="Profile" className="w-full h-full object-cover" />
+                    <img src={profileImg} alt="Profile" className="w-full h-full object-cover" />
                 </div>
                 <div className="pt-14">
                     <h2 className="text-xl font-bold text-gray-800">{profile.fullname}</h2>
@@ -86,10 +156,26 @@ const UserProfile = () => {
                 </div>
             </div>
             {!isOwnProfile && (
-                <div className="mt-6">
-                    <button onClick={handleRequestSession} className="bg-orange-500 text-white px-4 py-2 rounded">Request Mentorship</button>
-                    <button className="ml-3 border border-orange-500 text-orange-500 px-4 py-2 rounded">Message</button>
-                </div>
+                <>
+                    <SessionRequestModal
+                        isOpen={showModal}
+                        onClose={() => setShowModal(false)}
+                        onSubmit={handleSendRequest}
+                        recipientId={profile._id}
+                    />
+
+                    <div className="mt-6">
+                        <button onClick={() => setShowModal(true)} className="bg-orange-500 text-white px-4 py-2 rounded">
+                            {session?.status ? `Session Status: ${session.status}` : 'Request Session'}
+                        </button>
+
+                        <button onClick={handleStartChat} className="ml-3 border border-orange-500 text-orange-500 px-4 py-2 rounded">
+                            Message
+                        </button>
+
+                    </div>
+                </>
+
             )}
 
         </div>

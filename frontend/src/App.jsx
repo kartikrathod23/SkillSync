@@ -8,6 +8,10 @@ import Contact from "./pages/Contact"
 import About from "./pages/About"
 import Dashboard from "./pages/Dashboard"
 import UserProfile from './pages/Profile'
+import ChatPage from "./pages/ChatPage"
+import SessionVideoCall from "./pages/SessionVideoCall"
+import AllSkillMatches from "./pages/AllSkillMatches"
+
 
 function App() {
 
@@ -19,9 +23,14 @@ function App() {
         <Route path="/signup" element={<SignupPage/>}/>
         <Route path="/about" element={<About/>}/>
         <Route path="/features" element={<Features/>} />
-        <Route path="/contact" element={<Contact/>}/>
+        {/* <Route path="/contact" element={<Contact/>}/> */}
         <Route path="/dashboard" element={<Dashboard/>}/>
         <Route path="/profile/:id" element={<UserProfile />} />
+        <Route path="/chat/:roomId" element={<ChatPage />} />
+        <Route path="/session/:sessionId" element={<SessionVideoCall />} />
+        <Route path="/all-skill-matches" element={<AllSkillMatches />} />
+        {/* Add more routes as needed */}
+        <Route path="*" element={<h1>404 Not Found</h1>} />
       </Routes>
     </Router>
   )
