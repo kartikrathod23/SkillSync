@@ -28,24 +28,6 @@ JWT Authentication
 Bcrypt for password hashing
 
 
-📁 Project Structure
-skillsync/
-├── frontend/           # React application
-│   ├── src/
-│   │   ├── pages/      # Page components
-│   │   ├── components/ # Reusable components
-│   │   └── utils/      # Helper functions
-│   └── package.json
-│
-├── backend/            # Node.js server
-│   ├── routes/         # API routes
-│   ├── controllers/    # Route handlers
-│   ├── models/         # Mongoose schemas
-│   ├── middlewares/    # Auth middleware
-│   └── package.json
-│
-└── README.md
-
 🚀 Getting Started
 Prerequisites
 
@@ -56,7 +38,7 @@ npm or yarn
 
 Installation & Setup
 1. Clone the repository
-bashgit clone https://github.com/yourusername/skillsync.git
+bashgit clone https://github.com/kartikrathod23/SkillSync.git
 cd skillsync
 
 2. Backend Setup
